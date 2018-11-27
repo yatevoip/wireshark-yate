@@ -3,11 +3,11 @@
 Summary:	Plugin for Wireshark
 Name:		@PACKAGE_TARNAME@
 Version:	@PACKAGE_VERSION@
-Release:	1
+Release:	@PACKAGE_RELEASE@
 License:	GPLv2+
 Packager:	Sabina Iliescu <sabina@null.ro>   
 Group:		Applications/Internet
-Source:		http://yate.null.ro/%{name}-%{version}.tar.gz
+Source:		http://yate.null.ro/%{name}-%{version}-@PACKAGE_RELEASE@.tar.gz
 URL:		http://yate.null.ro/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:	gcc
@@ -31,9 +31,7 @@ Wireshark-YATE is a plugin which dissects Yate's Internal Messages
 	--datadir=%{_datadir} \
 	--libdir=%{_libdir} --mandir=%{_mandir} --with-archlib=%{_lib} \
 	--without-spandsp --without-coredumper 
-
-%make
-	
+ 
 %install
 make install DESTDIR=%{buildroot}
  
