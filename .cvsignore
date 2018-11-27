@@ -1,0 +1,8 @@
+*.cache
+Makefile
+configure
+config.*
+yimp.spec
+*.o
+*.d
+*.so
