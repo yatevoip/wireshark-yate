@@ -49,7 +49,7 @@ uninstall:
 
 .PHONY: snapshot tarball rpm
 snapshot tarball: 
-	@if [ $@ = snapshot ]; then ver="`date '+CVS-%Y%m%d'`"; else ver="@PACKAGE_VERSION@-@PACKAGE_RELEASE@"; fi ; \
+	@if [ $@ = snapshot ]; then ver="`date '+CVS-%Y%m%d'`"; else ver="@PACKAGE_VERSION@"; fi ; \
 	wd=`pwd|sed 's,^.*/,,'`; \
 	mkdir -p tarballs; cd ..; \
 	echo $$wd/tar-exclude >$$wd/tar-exclude; \
@@ -69,7 +69,7 @@ snapshot tarball:
 	rm $$wd/tar-exclude
 	
 rpm: tarball
-	rpmbuild -tb tarballs/@PACKAGE_TARNAME@-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.tar.gz
+	rpmbuild -tb tarballs/@PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz
 	
 .PHONY: clean
 clean:
