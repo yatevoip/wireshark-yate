@@ -1,0 +1,56 @@
+# Makefile
+# This file holds the make rules for the Wireshark-Yate Plugin
+
+DESTDIR := 
+
+CC  := @CC@ -Wall
+INCLUDES := -I. -I@srcdir@
+CFLAGS :=  @WIRESHARKDEVEL_INC@ @GLIBDEVEL_INC@ 
+INCFILES :=
+
+MKDEPS := ./config.status
+PROGS=wireshark-yate
+OBJS = plugin.o packet-yimp.o
+LIB = yimp.so
+LIBS = @WIRESHARKDEVEL_LIB@ @GLIBDEVEL_LIB@ 
+
+COMPILE = $(CC) $(INCLUDES) $(CFLAGS)
+LINK = $(CC) $(LDFLAGS) $(LIBS)
+
+moddir := @WIRESHARKDIR@
+
+%.o: @srcdir@/%.c $(MKDEPS) $(INCFILES)
+	$(COMPILE) -c $< 
+	
+lib%.so:%.o
+	$(LINK) -shared -o $@ $^ $(LIBS)
+ 
+Makefile: @srcdir@/Makefile.in config.status
+	./config.status
+
+.PHONY: all
+all: $(LIB) 
+
+$(LIB): CFLAGS += -fPIC
+$(LIB): LDFLAGS += -shared
+$(LIB): $(OBJS)
+	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
+
+.PHONY: install	
+install:
+	@mkdir -p "$(DESTDIR)$(moddir)/" && \
+	for i in $(LIB) ; do \
+	    install -m 644 yimp.so $(DESTDIR)$(moddir)/ ; \
+	done; \
+	
+.PHONY: uninstall
+uninstall:
+	@-for i in $(LIB) ; do \
+	    rm -f "$(DESTDIR)$(moddir)/$$i" ; \
+	done; 
+	@-rmdir "$(DESTDIR)$(moddir)"
+
+.PHONY: clean
+clean:
+	@-$(RM) $(CLEANS) 2>/dev/null
+	

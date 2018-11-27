@@ -1,0 +1,44 @@
+#Spec file for Wireshark-YATE Plugin
+
+ 
+Summary:	Plugin for Wireshark
+Name:		@PACKAGE_TARNAME@
+Version:	@PACKAGE_VERSION@
+Release:	1
+License:	GPLv2+
+Packager:	Sabina Iliescu <sabina@null.ro>   
+Group:		Applications/Internet
+Source:		http://yate.null.ro/tarballs/@PACKAGE_TARNAME@@PACKAGE_VERSION_MAJOR@/@PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz
+URL:		http://yate.null.ro/
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires:	gcc
+BuildRequires:	wireshark-devel
+ 
+%description
+Wireshark-YATE is a plugin which dissects Yate's Internal Messages
+
+%global debug_package %{nil}
+
+%define prefix  /usr
+
+%files
+%{_libdir}/wireshark/yimp.so
+
+%prep
+%setup -q -n %{name}
+ 
+%build
+./configure --prefix=%{prefix} --sysconfdir=%{_sysconfdir} \
+	--datadir=%{_datadir} \
+	--libdir=%{_libdir} --mandir=%{_mandir} --with-archlib=%{_lib} \
+	--without-spandsp --without-coredumper 
+
+%install
+make install DESTDIR=%{buildroot}
+ 
+%clean
+rm -rf %{buildroot}
+ 
+%changelog
+* Tue Oct 30 2018 Sabina Iliescu <sabina@null.ro>
+- created .spec file
