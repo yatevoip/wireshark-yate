@@ -19,6 +19,11 @@ LINK = $(CC) $(LDFLAGS) $(LIBS)
 
 moddir := @WIRESHARKDIR@
 
+$(LIB): CFLAGS += -fPIC
+$(LIB): LDFLAGS += -shared
+$(LIB): $(OBJS)
+	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
+
 %.o: @srcdir@/%.c $(MKDEPS) $(INCFILES)
 	$(COMPILE) -c $< 
 	
@@ -27,14 +32,6 @@ lib%.so:%.o
  
 Makefile: @srcdir@/Makefile.in config.status
 	./config.status
-
-.PHONY: all
-all: $(LIB) 
-
-$(LIB): CFLAGS += -fPIC
-$(LIB): LDFLAGS += -shared
-$(LIB): $(OBJS)
-	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
 
 .PHONY: install	
 install:

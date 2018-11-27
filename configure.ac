@@ -63,7 +63,7 @@ AC_PROG_CC
 HAVE_WIRESHARKDEVEL=no
 WIRESHARKDEVEL_INC=""
 WIRESHARKDEVEL_LIB=""
-AC_ARG_WITH(WIRESHARKDEVEL,AC_HELP_STRING([--with-WIRESHARKDEVEL=DIR],[use wireshark-devel library from DIR]),[ac_cv_use_wiresharkdevel=$withval],[ac_cv_use_wiresharkdevel=yes])
+AC_ARG_WITH(wiresharkdevel,AC_HELP_STRING([--with-wiresharkdevel=DIR],[use Wireshark library from DIR]), [ac_cv_use_wiresharkdevel=$withval],[ac_cv_use_wiresharkdevel=yes])
 
 if [[ "x$ac_cv_use_wiresharkdevel" != "xno" ]]; then
 if [[ "x$ac_cv_use_wiresharkdevel" = "xyes" ]]; then
@@ -73,27 +73,26 @@ AC_MSG_CHECKING([for wireshark-devel using pkg-config])
 WIRESHARKDEVEL_INC=`(pkg-config --cflags wireshark) 2>/dev/null`
 
 WIRESHARKDEVEL_LIB=`(pkg-config --libs wireshark) 2>/dev/null`
-
 if [[ "x$WIRESHARKDEVEL_INC$WIRESHARKDEVEL_LIB" = "x" ]]; then
 WIRESHARKDEVEL_INC=""
 WIRESHARKDEVEL_LIB=""
+AC_MSG_ERROR([wireshark-devel is required])
 else
 HAVE_WIRESHARKDEVEL=yes
 fi
-
 else
 AC_MSG_CHECKING([for wireshark-devel in $ac_cv_use_wiresharkdevel])
-local_lib = "$ARCHLIB"
-wiresharkinc = "$ac_cv_use_wiresharkdevel/include/WIRESHARKDEVEL"
-test -f "$ac_cv_use_wiresharkdevel/$local_lib/libyimp.so" || local_lib="lib"
-if [[ -f "$ac_cv_use_wiresharkdevel/$local_lib/libyimp.so" ]]; then
+if [[ -f "$ac_cv_use_wiresharkdevel/wireshark" ]]; then
+WIRESHARKDEVEL_INC="-I$ac_cv_use_wiresharkdevel"
+WIRESHARKDEVEL_LIB="-lwireshark"
 HAVE_WIRESHARKDEVEL=yes
-WIRESHARKDEVEL_LIB="-L$ac_cv_use_wiresharkdevel/$local_lib -lWIRESHARKDEVEL"
-WIRESHARKDEVEL_INC="-I$wiresharkinc"
 fi
 fi
 AC_MSG_RESULT([$HAVE_WIRESHARKDEVEL])
 fi
+AC_SUBST(HAVE_WIRESHARKDEVEL)
+AC_SUBST(WIRESHARKDEVEL_INC)
+AC_SUBST(WIRESHARKDEVEL_LIB)
 
 
 # - plugins directory
@@ -112,11 +111,7 @@ fi
 		AC_SUBST(WIRESHARKDIR)
 	fi
 
-AC_SUBST(HAVE_WIRESHARKDEVEL)
-AC_SUBST(WIRESHARKDEVEL_INC)
-AC_SUBST(WIRESHARKDEVEL_LIB)
-
-
+	
 HAVE_GLIBDEVEL=no
 GLIBDEVEL_INC=""
 GLIBDEVEL_LIB=""
@@ -142,7 +137,7 @@ AC_SUBST(HAVE_GLIBDEVEL)
 AC_SUBST(GLIBDEVEL_INC)
 AC_SUBST(GLIBDEVEL_LIB)
 
-AC_CONFIG_FILES([ packaging/rpm/SPECS/yimp.spec
+AC_CONFIG_FILES([yimp.spec
 Makefile
 ])
 AC_SUBST(CONFIGURE_FILES)

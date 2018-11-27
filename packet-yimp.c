@@ -1822,6 +1822,9 @@ dissect_data(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, int offset, vo
     const char *con;
     int i = 0;
     int v = 0;
+    int n;
+    int j;
+    unsigned int x;
     
     col_set_str(pinfo->cinfo, COL_PROTOCOL, "YIMP");
     
@@ -1858,7 +1861,7 @@ dissect_data(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, int offset, vo
     col_append_fstr(pinfo->cinfo, COL_INFO, "Data: %d Lines x %d Columns ", line_size, col_size);
     
     
-    for (int n = 0; n < result; n++)    {
+    for (n = 0; n < result; n++)    {
 	
 	size = 0;
 	size_bytes = 0;
@@ -1906,7 +1909,7 @@ dissect_data(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, int offset, vo
 	    }
 	}
 	
-	for(int j = 0; j < line_size ; j++) { 
+	for(j = 0; j < line_size ; j++) { 
 	    
 	    len[j] = lenUtf8(buf[v*line_size + j], 0x10ffff);
 	    
@@ -1931,7 +1934,7 @@ dissect_data(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, int offset, vo
     
     query_tree = proto_item_add_subtree(tlv_tree, ett_yimp);
     
-    for (unsigned int x = 0; x < line_size; x+=1)
+    for (x = 0; x < line_size; x+=1)
     {
 	con  = concatenate(result, array, x, line_size, " ");
 
@@ -2005,7 +2008,6 @@ static const struct {
     {Uninstall2, "%%<uninstall"},
     {Unwatch1, "%%>unwatch"},
     {Unwatch2, "%%<unwatch"}
-    //TokenDict
 };
 
 COMMANDS str2enum(const char *str)
