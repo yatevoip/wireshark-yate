@@ -65,53 +65,63 @@ WIRESHARKDEVEL_INC=""
 WIRESHARKDEVEL_LIB=""
 AC_ARG_WITH(wiresharkdevel,AC_HELP_STRING([--with-wiresharkdevel=DIR],[use Wireshark library from DIR]), [ac_cv_use_wiresharkdevel=$withval],[ac_cv_use_wiresharkdevel=yes])
 
-if [[ "x$ac_cv_use_wiresharkdevel" != "xno" ]]; then
 if [[ "x$ac_cv_use_wiresharkdevel" = "xyes" ]]; then
-
 AC_MSG_CHECKING([for wireshark-devel using pkg-config])
 
 WIRESHARKDEVEL_INC=`(pkg-config --cflags wireshark) 2>/dev/null`
-
 WIRESHARKDEVEL_LIB=`(pkg-config --libs wireshark) 2>/dev/null`
-if [[ "x$WIRESHARKDEVEL_INC$WIRESHARKDEVEL_LIB" = "x" ]]; then
+
+if [[ -z "$WIRESHARKDEVEL_INC" -o -z "$WIRESHARKDEVEL_LIB" ]]; then
 WIRESHARKDEVEL_INC=""
 WIRESHARKDEVEL_LIB=""
-AC_MSG_ERROR([wireshark-devel is required])
 else
 HAVE_WIRESHARKDEVEL=yes
-fi
-else
-AC_MSG_CHECKING([for wireshark-devel in $ac_cv_use_wiresharkdevel])
-if [[ -f "$ac_cv_use_wiresharkdevel/wireshark" ]]; then
-WIRESHARKDEVEL_INC="-I$ac_cv_use_wiresharkdevel"
-WIRESHARKDEVEL_LIB="-lwireshark"
-HAVE_WIRESHARKDEVEL=yes
-fi
+ac_cv_use_wiresharkdevel=no
 fi
 AC_MSG_RESULT([$HAVE_WIRESHARKDEVEL])
 fi
+
+if [[ "x$ac_cv_use_wiresharkdevel" != "xno" ]]; then
+if [[ "x$ac_cv_use_wiresharkdevel" == "xyes" ]]; then
+ac_cv_use_wiresharkdevel=/usr
+fi
+AC_MSG_CHECKING([for wireshark-devel in $ac_cv_use_wiresharkdevel])
+local_lib="$ARCHLIB"
+wiresharkinc="$ac_cv_use_wiresharkdevel/include/wireshark"
+test -f "$ac_cv_use_wiresharkdevel/$local_lib/libwireshark.so" || local_lib="lib"
+if [[ -f "$wiresharkinc/config.h" -a -f "$ac_cv_use_wiresharkdevel/$local_lib/libwireshark.so" ]]; then
+HAVE_WIRESHARKDEVEL=yes
+WIRESHARKDEVEL_LIB="-L$ac_cv_use_wiresharkdevel/$local_lib -lwireshark"
+WIRESHARKDEVEL_INC="-I$wiresharkinc"
+fi
+AC_MSG_RESULT([$HAVE_WIRESHARKDEVEL])
+fi
+
+if [[ "X$HAVE_WIRESHARKDEVEL" != "Xyes" ]]; then
+AC_MSG_ERROR([wireshark-devel is required])
+fi
+
 AC_SUBST(HAVE_WIRESHARKDEVEL)
 AC_SUBST(WIRESHARKDEVEL_INC)
 AC_SUBST(WIRESHARKDEVEL_LIB)
 
 
 # - plugins directory
-	AC_ARG_WITH([wireshark-plugin-dir],
-		AC_HELP_STRING([--with-wireshark-plugin-dir=DIR],[path to Wireshark plugins dir (/usr/lib64/wireshark)]),
-		WIRESHARKDIR="$withval"
-		,
-		WIRESHARKDIR="/usr/lib64/wireshark"
-	)
-	AC_MSG_CHECKING([for existence of Wireshark plugins directory $WIRESHARKDIR])
-	if test ! -d "$WIRESHARKDIR"; then
-		AC_MSG_RESULT([missing])
-		AC_MSG_ERROR([Wrong path, $WIRESHARKDIR does not exist.])
-	else
-		AC_MSG_RESULT([yes])
-		AC_SUBST(WIRESHARKDIR)
-	fi
+AC_ARG_WITH([wireshark-plugin-dir],
+	AC_HELP_STRING([--with-wireshark-plugin-dir=DIR],[path to Wireshark plugins dir (/usr/lib64/wireshark)]),
+	WIRESHARKDIR="$withval"
+	,
+	WIRESHARKDIR="/usr/lib64/wireshark"
+)
+AC_MSG_CHECKING([for existence of Wireshark plugins directory $WIRESHARKDIR])
+if test ! -d "$WIRESHARKDIR"; then
+	AC_MSG_RESULT([missing])
+	AC_MSG_ERROR([Wrong path, $WIRESHARKDIR does not exist.])
+else
+	AC_MSG_RESULT([yes])
+	AC_SUBST(WIRESHARKDIR)
+fi
 
-	
 HAVE_GLIBDEVEL=no
 GLIBDEVEL_INC=""
 GLIBDEVEL_LIB=""
