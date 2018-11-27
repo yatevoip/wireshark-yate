@@ -71,7 +71,15 @@ snapshot tarball:
 rpm: tarball
 	rpmbuild -tb tarballs/@PACKAGE_TARNAME@-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.tar.gz
 	
-.PHONY: clean
-clean:
+.PHONY: clean cvsclean clean-config-files
+cvsclean:
 	@-$(RM) $(CLEANS) 2>/dev/null
 	
+clean-config-files: 
+	-rm -rf auto*.cache
+	-rm -f @CONFIGURE_FILES@
+
+distclean: cvsclean clean-config-files
+
+clean: distclean
+	-rm -f configure yimp.spec

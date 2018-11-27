@@ -141,6 +141,7 @@ AC_SUBST(GLIBDEVEL_LIB)
 AC_CONFIG_FILES([yimp.spec
 Makefile
 ])
+CONFIGURE_FILES=`echo "$ac_config_files config.status config.log" | sed 's/^.*\.spec *//'`
 AC_SUBST(CONFIGURE_FILES)
 AC_OUTPUT
 
