@@ -21,7 +21,7 @@ Wireshark-YATE is a plugin which dissects Yate's Internal Messages
 %define prefix  /usr
  
 %files
-%{_libdir}/wireshark/yimp.so
+@WIRESHARKPLUGINDIR@/yimp.so
  
 %prep
 %setup -q -n %{name}
