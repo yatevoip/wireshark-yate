@@ -78,6 +78,7 @@ cvsclean:
 clean-config-files: 
 	-rm -rf auto*.cache
 	-rm -f @CONFIGURE_FILES@
+	-rm -f *.o
 
 distclean: cvsclean clean-config-files
 
