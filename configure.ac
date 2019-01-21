@@ -136,7 +136,7 @@ local_lib="$ARCHLIB"
 plugindir="$ac_cv_use_wiresharkdir/$local_lib/wireshark"
 AC_MSG_CHECKING([for existence of Wireshark plugin directory in $plugindir])
 test -f "$ac_cv_use_wiresharkdir/$local_lib/wireshark" || local_lib="lib"
-if [[ -f "$plugindir" ]]; then
+if [[ -d "$plugindir" ]]; then
 HAVE_WIRESHARKPLUGINDIR=yes
 WIRESHARKPLUGINDIR="$plugindir"
 fi
