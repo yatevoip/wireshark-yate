@@ -35,6 +35,10 @@
 #undef VERSION
 #endif
 
-/* Version number of package */
-#define VERSION "0.0.4"
+#ifdef PLUGIN_VERSION
+#undef PLUGIN_VERSION
+#endif
 
+/* Version number of package */
+#define VERSION "0.0.1"
+#define PLUGIN_VERSION "0.0.1"
