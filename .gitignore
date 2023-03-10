@@ -1,0 +1,17 @@
+tarballs
+*.cache
+Makefile
+Makefile.local
+configure
+config.*
+yimp.spec
+*-stamp
+*.o
+*.so
+*.so.*
+*.orig
+*~
+.*.swp
+*.log
+*.out
+
